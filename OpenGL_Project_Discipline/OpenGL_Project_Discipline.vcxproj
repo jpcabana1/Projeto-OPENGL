@@ -155,10 +155,12 @@
     <ClCompile Include="HelloTriangule.cpp" />
     <ClCompile Include="HelloWindow.cpp" />
     <ClCompile Include="ExampleNotUsingShaderClass.cpp" />
+    <ClCompile Include="ship.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ship.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="newShader.fs" />

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{499ac85a-6e78-48fd-97c9-7737f4c83d2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -24,16 +27,36 @@
     <ClCompile Include="HelloWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shaders.cpp">
+    <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="ExampleNotUsingShaderClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="shader.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="newShader.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="newShader.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="transform.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="transform.fs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Shader.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

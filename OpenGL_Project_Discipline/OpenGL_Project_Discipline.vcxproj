@@ -154,11 +154,19 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="HelloTriangule.cpp" />
     <ClCompile Include="HelloWindow.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Shaders.cpp" />
+    <ClCompile Include="ExampleNotUsingShaderClass.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="newShader.fs" />
+    <None Include="newShader.vs" />
+    <None Include="shader.fs" />
+    <None Include="shader.vs" />
+    <None Include="transform.fs" />
+    <None Include="transform.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

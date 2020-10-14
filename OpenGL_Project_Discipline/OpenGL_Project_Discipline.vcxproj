@@ -159,6 +159,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="filesystem.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ship.h" />
   </ItemGroup>
@@ -167,6 +168,8 @@
     <None Include="newShader.vs" />
     <None Include="shader.fs" />
     <None Include="shader.vs" />
+    <None Include="text.fs" />
+    <None Include="text.vs" />
     <None Include="transform.fs" />
     <None Include="transform.vs" />
   </ItemGroup>

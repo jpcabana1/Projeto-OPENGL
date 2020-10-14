@@ -6,7 +6,10 @@
 #include <iostream>
 #include "Shader.h"
 #include "ship.h"
-
+#include <ft2build.h>
+#include <map>
+#include FT_FREETYPE_H
+#include "filesystem.h"
 
 enum Color { red, green, blue };
 
@@ -20,9 +23,17 @@ void subCoordX(float* coord);
 void subCoordY(float* coord);
 void printCoordinates(float p_coordx, float p_coordy);
 void moveEnemy();
+void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color);
+
 #pragma endregion
 
 #pragma region Globais
+struct Character {
+	unsigned int TextureID; // ID handle of the glyph texture
+	glm::ivec2   Size;      // Size of glyph
+	glm::ivec2   Bearing;   // Offset from baseline to left/top of glyph
+	unsigned int Advance;   // Horizontal offset to advance to next glyph
+};
 Color col = red;
 float accel = 0.0005;
 float coordx1 = 0.0, coordy1 = 0.0;
@@ -68,7 +79,8 @@ float Enemy6[] = {
 
 #pragma endregion
 
-
+std::map<GLchar, Character> Characters;
+unsigned int VBO[8], VAO[8];
 
 int main() {
 #pragma region Declarações
@@ -76,7 +88,7 @@ int main() {
 	const unsigned int S_HEIGHT = 600;
 	
 	GLFWwindow* window;
-	unsigned int VBO[7], VAO[7];
+	
 	
 	//float player[] = {
 	//	// positions         // colors
@@ -122,14 +134,100 @@ int main() {
 	}
 #pragma endregion
 
+/*
+#pragma region Fonts
+	FT_Library ft;
+
+	Shader shader("text.vs", "text.fs");
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(S_WIDTH), 0.0f, static_cast<float>(S_HEIGHT));
+	shader.use();
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+	// FreeType
+		// --------
+	FT_Library ft;
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
+	{
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+		return -1;
+	}
+
+	// find path to font
+	std::string font_name = FileSystem::getPath("resources/fonts/Antonio-Bold.ttf");
+	if (font_name.empty())
+	{
+		std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
+		return -1;
+	}
+
+	// load font as face
+	FT_Face face;
+	if (FT_New_Face(ft, font_name.c_str(), 0, &face)) {
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return -1;
+	}
+	else {
+		// set size to load glyphs as
+		FT_Set_Pixel_Sizes(face, 0, 48);
+
+		// disable byte-alignment restriction
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		// load first 128 characters of ASCII set
+		for (unsigned char c = 0; c < 128; c++)
+		{
+			// Load character glyph 
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+			{
+				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+				continue;
+			}
+			// generate texture
+			unsigned int texture;
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RED,
+				face->glyph->bitmap.width,
+				face->glyph->bitmap.rows,
+				0,
+				GL_RED,
+				GL_UNSIGNED_BYTE,
+				face->glyph->bitmap.buffer
+			);
+			// set texture options
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			// now store character for later use
+			Character character = {
+				texture,
+				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+				static_cast<unsigned int>(face->glyph->advance.x)
+			};
+			Characters.insert(std::pair<char, Character>(c, character));
+		}
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	// destroy FreeType once we're finished
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
+
+#pragma endregion
+*/
+
 #pragma region Shaders
 	
-	Shader ourShader("transform.vs", "transform.fs");
-	Shader thisShader("newShader.vs", "newShader.fs");
-
+Shader ourShader("transform.vs", "transform.fs");
+Shader thisShader("newShader.vs", "newShader.fs");
 	//-------------------VAO, VBO//-------------------
-	glGenVertexArrays(7, VAO);
-	glGenBuffers(7, VBO);
+	glGenVertexArrays(8, VAO);
+	glGenBuffers(8, VBO);
 
 
 	glBindVertexArray(VAO[0]);
@@ -227,6 +325,9 @@ int main() {
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		/*RenderText(shader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+		RenderText(shader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));*/
 #pragma region Player
 		glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		transform = glm::translate(transform, glm::vec3(jogador.getX(), jogador.getY(), 0.0f));
@@ -299,7 +400,12 @@ int main() {
 				glBindVertexArray(VAO[6]);
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 		#pragma endregion
-
+				if (coordx1 == -0.5) {
+					left = false;
+				}
+				if (coordx1 == 0.5) {
+					left = true;
+				}
 		//moveEnemy();
 				
 #pragma endregion
@@ -319,12 +425,12 @@ int main() {
 #pragma region Imp. Funções
 void moveEnemy() 
 {
-	if (coordx1 == -0.5) {
+	if (left) {
 		subCoordX(&coordx1);
 		return;
-	}else if (coordx1 <= 0.5) {
+	}
+	else{
 		addCoordX(&coordx1);
-		return;
 	}	
 }
 
@@ -422,7 +528,50 @@ void printCoordinates(float p_coordx, float p_coordy)
 }
 
 
+void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color)
+{
+	// activate corresponding render state	
+	shader.use();
+	glUniform3f(glGetUniformLocation(shader.ID, "textColor"), color.x, color.y, color.z);
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(VAO[8]);
 
+	// iterate through all characters
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++)
+	{
+		Character ch = Characters[*c];
+
+		float xpos = x + ch.Bearing.x * scale;
+		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+
+		float w = ch.Size.x * scale;
+		float h = ch.Size.y * scale;
+		// update VBO for each character
+		float vertices[6][4] = {
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos,     ypos,       0.0f, 1.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+			{ xpos + w, ypos + h,   1.0f, 0.0f }
+		};
+		// render glyph texture over quad
+		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+		// update content of VBO memory
+		glBindBuffer(GL_ARRAY_BUFFER, VBO[8]);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // be sure to use glBufferSubData and not glBufferData
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// render quad
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+		x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 #pragma endregion
 

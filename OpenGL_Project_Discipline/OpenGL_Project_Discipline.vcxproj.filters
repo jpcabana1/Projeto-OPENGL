@@ -56,12 +56,21 @@
     <None Include="transform.fs">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="text.vs">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="text.fs">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
       <Filter>Source Files\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="ship.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

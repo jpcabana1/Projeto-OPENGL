@@ -28,6 +28,7 @@ void RenderText(Shader& shader, std::string text, float x, float y, float scale,
 #pragma endregion
 
 #pragma region Globais
+int state = 0;
 struct Character {
 	unsigned int TextureID; // ID handle of the glyph texture
 	glm::ivec2   Size;      // Size of glyph
@@ -85,6 +86,7 @@ unsigned int VBO[8], VAO[8];
 
 int main() {
 #pragma region Declarações
+	
 	const unsigned int S_WIDTH = 800;
 	const unsigned int S_HEIGHT = 600;
 	GLFWwindow* window;
@@ -305,97 +307,107 @@ Shader thisShader("newShader.vs", "newShader.fs");
 	while (!glfwWindowShouldClose(window))
 	{
 		float time = (float)glfwGetTime();
-		processInput(window);
+
 		
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 
-		/*RenderText(shader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-		RenderText(shader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));*/
+			processInput(window);
+
+
+			/*RenderText(shader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+			RenderText(shader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));*/
+if (state == 0) {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 #pragma region Player
-		glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		transform = glm::translate(transform, glm::vec3(jogador.getX(), jogador.getY(), 0.0f));
-		//transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		ourShader.use();
-		unsigned int transformLoc1 = glGetUniformLocation(ourShader.ID, "transform");
-		glUniformMatrix4fv(transformLoc1, 1, GL_FALSE, glm::value_ptr(transform));
-		glBindVertexArray(VAO[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+			glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+			transform = glm::translate(transform, glm::vec3(jogador.getX(), jogador.getY(), 0.0f));
+			//transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+			ourShader.use();
+			unsigned int transformLoc1 = glGetUniformLocation(ourShader.ID, "transform");
+			glUniformMatrix4fv(transformLoc1, 1, GL_FALSE, glm::value_ptr(transform));
+			glBindVertexArray(VAO[0]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
 #pragma endregion
-
 #pragma region Enemies
-		#pragma region Enemy1
-				glm::mat4 transform2 = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-				transform2 = glm::translate(transform2, glm::vec3(coordx1, coordy1, 0.0f));
-				//transform2 = glm::rotate(transform2, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-				thisShader.use();
-				unsigned int transformLoc2 = glGetUniformLocation(thisShader.ID, "newShader");
-				glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(transform2));
-				glBindVertexArray(VAO[1]);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-		#pragma endregion
-
-		#pragma region Enemy2
-				glm::mat4 transform3 = glm::mat4(1.0f); 
-				transform3 = glm::translate(transform3, glm::vec3(coordx1, coordy1, 0.0f));
-				thisShader.use();
-				unsigned int transformLoc3 = glGetUniformLocation(thisShader.ID, "newShader");
-				glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(transform3));
-				glBindVertexArray(VAO[2]);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-		#pragma endregion
-
-		#pragma region Enemy3
-				glm::mat4 transform4 = glm::mat4(1.0f);
-				transform4 = glm::translate(transform4, glm::vec3(coordx1, coordy1, 0.0f));
-				thisShader.use();
-				unsigned int transformLoc4 = glGetUniformLocation(thisShader.ID, "newShader");
-				glUniformMatrix4fv(transformLoc4, 1, GL_FALSE, glm::value_ptr(transform4));
-				glBindVertexArray(VAO[3]);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-		#pragma endregion
-
-		#pragma region Enemy4
-				glm::mat4 transform5 = glm::mat4(1.0f);
-				transform5 = glm::translate(transform5, glm::vec3(coordx1, coordy1, 0.0f));
-				thisShader.use();
-				unsigned int transformLoc5 = glGetUniformLocation(thisShader.ID, "newShader");
-				glUniformMatrix4fv(transformLoc5, 1, GL_FALSE, glm::value_ptr(transform5));
-				glBindVertexArray(VAO[4]);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-		#pragma endregion
-
-		#pragma region Enemy5
-				glm::mat4 transform6 = glm::mat4(1.0f);
-				transform6 = glm::translate(transform6, glm::vec3(coordx1, coordy1, 0.0f));
-				thisShader.use();
-				unsigned int transformLoc6 = glGetUniformLocation(thisShader.ID, "newShader");
-				glUniformMatrix4fv(transformLoc6, 1, GL_FALSE, glm::value_ptr(transform6));
-				glBindVertexArray(VAO[5]);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-		#pragma endregion
-
-		#pragma region Enemy6
-				glm::mat4 transform7 = glm::mat4(1.0f);
-				transform7 = glm::translate(transform7, glm::vec3(coordx1, coordy1, 0.0f));
-				thisShader.use();
-				unsigned int transformLoc7 = glGetUniformLocation(thisShader.ID, "newShader");
-				glUniformMatrix4fv(transformLoc7, 1, GL_FALSE, glm::value_ptr(transform7));
-				glBindVertexArray(VAO[6]);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-		#pragma endregion
-
-		//if (coordx1 == -0.5) {
-		//	left = false;
-		//}
-
-		//if (coordx1 == 0.5) {
-		//	left = true;
-		//}
-
-		//moveEnemy();
-				
+#pragma region Enemy1
+			glm::mat4 transform2 = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+			transform2 = glm::translate(transform2, glm::vec3(coordx1, coordy1, 0.0f));
+			//transform2 = glm::rotate(transform2, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+			thisShader.use();
+			unsigned int transformLoc2 = glGetUniformLocation(thisShader.ID, "newShader");
+			glUniformMatrix4fv(transformLoc2, 1, GL_FALSE, glm::value_ptr(transform2));
+			glBindVertexArray(VAO[1]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
 #pragma endregion
+
+#pragma region Enemy2
+			glm::mat4 transform3 = glm::mat4(1.0f);
+			transform3 = glm::translate(transform3, glm::vec3(coordx1, coordy1, 0.0f));
+			thisShader.use();
+			unsigned int transformLoc3 = glGetUniformLocation(thisShader.ID, "newShader");
+			glUniformMatrix4fv(transformLoc3, 1, GL_FALSE, glm::value_ptr(transform3));
+			glBindVertexArray(VAO[2]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma endregion
+
+#pragma region Enemy3
+			glm::mat4 transform4 = glm::mat4(1.0f);
+			transform4 = glm::translate(transform4, glm::vec3(coordx1, coordy1, 0.0f));
+			thisShader.use();
+			unsigned int transformLoc4 = glGetUniformLocation(thisShader.ID, "newShader");
+			glUniformMatrix4fv(transformLoc4, 1, GL_FALSE, glm::value_ptr(transform4));
+			glBindVertexArray(VAO[3]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma endregion
+
+#pragma region Enemy4
+			glm::mat4 transform5 = glm::mat4(1.0f);
+			transform5 = glm::translate(transform5, glm::vec3(coordx1, coordy1, 0.0f));
+			thisShader.use();
+			unsigned int transformLoc5 = glGetUniformLocation(thisShader.ID, "newShader");
+			glUniformMatrix4fv(transformLoc5, 1, GL_FALSE, glm::value_ptr(transform5));
+			glBindVertexArray(VAO[4]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma endregion
+
+#pragma region Enemy5
+			glm::mat4 transform6 = glm::mat4(1.0f);
+			transform6 = glm::translate(transform6, glm::vec3(coordx1, coordy1, 0.0f));
+			thisShader.use();
+			unsigned int transformLoc6 = glGetUniformLocation(thisShader.ID, "newShader");
+			glUniformMatrix4fv(transformLoc6, 1, GL_FALSE, glm::value_ptr(transform6));
+			glBindVertexArray(VAO[5]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma endregion
+
+#pragma region Enemy6
+			glm::mat4 transform7 = glm::mat4(1.0f);
+			transform7 = glm::translate(transform7, glm::vec3(coordx1, coordy1, 0.0f));
+			thisShader.use();
+			unsigned int transformLoc7 = glGetUniformLocation(thisShader.ID, "newShader");
+			glUniformMatrix4fv(transformLoc7, 1, GL_FALSE, glm::value_ptr(transform7));
+			glBindVertexArray(VAO[6]);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+#pragma endregion
+
+			//if (coordx1 == -0.5) {
+			//	left = false;
+			//}
+
+			//if (coordx1 == 0.5) {
+			//	left = true;
+			//}
+
+			//moveEnemy();
+
+#pragma endregion
+}
+else {
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -442,7 +454,14 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		subCoordX(&coordx1);
 	}
-		
+	
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+			state = 1;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		state = 0;
+	}
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {

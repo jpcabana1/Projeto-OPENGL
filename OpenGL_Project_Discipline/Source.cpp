@@ -9,7 +9,7 @@
 #include <ft2build.h>
 #include <map>
 #include FT_FREETYPE_H
-#include "filesystem.h"
+
 
 enum Color { red, green, blue };
 
@@ -34,6 +34,7 @@ struct Character {
 	glm::ivec2   Bearing;   // Offset from baseline to left/top of glyph
 	unsigned int Advance;   // Horizontal offset to advance to next glyph
 };
+
 Color col = red;
 float accel = 0.0005;
 float coordx1 = 0.0, coordy1 = 0.0;
@@ -77,26 +78,16 @@ float Enemy6[] = {
 	 0.6f,  0.2f, 0.0f,  1.0f, 0.0f, 1.0f   // top
 };
 
-#pragma endregion
-
 std::map<GLchar, Character> Characters;
 unsigned int VBO[8], VAO[8];
+
+#pragma endregion
 
 int main() {
 #pragma region Declarações
 	const unsigned int S_WIDTH = 800;
 	const unsigned int S_HEIGHT = 600;
-	
 	GLFWwindow* window;
-	
-	
-	//float player[] = {
-	//	// positions         // colors
-	//	-0.06f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  // bottom left
-	//	 0.06f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-	//	 0.0f,  -0.4f, 0.0f,  0.0f, 1.0f, 1.0f   // top
-	//};
-
 	unsigned int indices[] = {
 		0, 1, 3, // first triangle
 		1, 2, 3  // second triangle
@@ -229,7 +220,6 @@ Shader thisShader("newShader.vs", "newShader.fs");
 	glGenVertexArrays(8, VAO);
 	glGenBuffers(8, VBO);
 
-
 	glBindVertexArray(VAO[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, (int)jogador.getSize(), jogador.getFormat(), GL_STATIC_DRAW);
@@ -239,7 +229,6 @@ Shader thisShader("newShader.vs", "newShader.fs");
 	// color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
 
 	//inimigo 1
 	glBindVertexArray(VAO[1]);
@@ -263,8 +252,6 @@ Shader thisShader("newShader.vs", "newShader.fs");
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-
-
 	//inimigo 3
 	glBindVertexArray(VAO[3]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[3]);
@@ -276,7 +263,6 @@ Shader thisShader("newShader.vs", "newShader.fs");
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-
 	//inimigo 3
 	glBindVertexArray(VAO[4]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[4]);
@@ -287,8 +273,6 @@ Shader thisShader("newShader.vs", "newShader.fs");
 	// color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-
 
 	//inimigo 5
 	glBindVertexArray(VAO[5]);
@@ -400,12 +384,15 @@ Shader thisShader("newShader.vs", "newShader.fs");
 				glBindVertexArray(VAO[6]);
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 		#pragma endregion
-				if (coordx1 == -0.5) {
-					left = false;
-				}
-				if (coordx1 == 0.5) {
-					left = true;
-				}
+
+		//if (coordx1 == -0.5) {
+		//	left = false;
+		//}
+
+		//if (coordx1 == 0.5) {
+		//	left = true;
+		//}
+
 		//moveEnemy();
 				
 #pragma endregion
@@ -434,8 +421,6 @@ void moveEnemy()
 	}	
 }
 
-
-
 void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -459,14 +444,11 @@ void processInput(GLFWwindow* window)
 	}
 		
 }
-
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	
 	glViewport(0, 0, width, height);
 }
-
 void setColor(Color *color, int newColor) {
 	if (newColor == 0)
 	{
@@ -479,7 +461,6 @@ void setColor(Color *color, int newColor) {
 		*color = blue;
 	}
 }
-
 void addCoordX(float *coord) {
 	if (*coord >= 0.95) {
 		*coord = 0.95;
@@ -487,7 +468,6 @@ void addCoordX(float *coord) {
 		*coord = *coord + accel;
 	}
 }
-
 void subCoordX(float* coord) {
 	if (*coord <= -0.95) {
 		*coord = -0.95;
@@ -495,7 +475,6 @@ void subCoordX(float* coord) {
 	else {
 		*coord = *coord + (-1* accel);
 	}
-	
 }
 void addCoordY(float* coord) {
 	if (*coord >= 1.39) {
@@ -504,9 +483,7 @@ void addCoordY(float* coord) {
 	else {
 		*coord = *coord + accel;
 	}
-	
 }
-
 void subCoordY(float* coord) {
 	if (*coord <= -0.5) {
 		*coord = -0.5;
@@ -515,7 +492,6 @@ void subCoordY(float* coord) {
 		*coord = *coord + (-1 * accel);
 	}
 }
-
 void printCoordinates(float p_coordx, float p_coordy)
 {
 	//system("CLS");
@@ -526,8 +502,6 @@ void printCoordinates(float p_coordx, float p_coordy)
 	std::cout << ")";
 	std::cout << std::endl;
 }
-
-
 void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color)
 {
 	// activate corresponding render state	
